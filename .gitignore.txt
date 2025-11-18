@@ -1,0 +1,17 @@
+# virtualenv
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# config files
+.env
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

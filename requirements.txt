@@ -1,0 +1,6 @@
+tk
+psutil>=5.9.0
+requests
+# torch
+# transformers
+# sentencepiece
