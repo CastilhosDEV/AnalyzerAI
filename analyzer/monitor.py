@@ -1,68 +1,38 @@
 # analyzer/monitor.py
-import threading
-import time
+"""
+Monitor proativo simples (psutil).
+Imprime avisos no console; roda em thread separada.
+"""
+
 import psutil
-from typing import Callable, Optional
+import time
+import logging
 
-class SystemMonitor(threading.Thread):
-    """
-    Thread que monitora o sistema periodicamente e chama callbacks
-    quando encontra condições que merecem atenção.
-    """
+logging.getLogger().setLevel(logging.INFO)
 
+class SystemMonitor:
     def __init__(self, interval: float = 5.0):
-        super().__init__(daemon=True)  # daemon -> não bloqueia encerramento do programa
         self.interval = interval
-        self._stop_event = threading.Event()
-        # callbacks: função que recebe (issue_type:str, details:dict)
-        self.on_alert: Optional[Callable[[str, dict], None]] = None
+        self._running = True
 
-        # thresholds (ajuste conforme desejar)
-        self.cpu_threshold = 90.0     # %
-        self.ram_threshold = 85.0     # %
-        self.disk_threshold = 90.0    # %
-        self.swap_threshold = 50.0    # %
-        self.high_threads_threshold = 300
+    def start_monitoring(self):
+        logging.info("[Monitor] iniciando")
+        while self._running:
+            try:
+                cpu = psutil.cpu_percent(interval=1)
+                mem = psutil.virtual_memory().percent
+                disk = psutil.disk_usage("/").percent
 
-    def stop(self):
-        self._stop_event.set()
-
-    def run(self):
-        while not self._stop_event.is_set():
-            self.check_once()
+                if cpu >= 90:
+                    logging.warning(f"[Monitor] CPU alto: {cpu}%")
+                if mem >= 85:
+                    logging.warning(f"[Monitor] RAM alta: {mem}%")
+                if disk >= 90:
+                    logging.warning(f"[Monitor] Disco cheio: {disk}%")
+            except Exception as e:
+                logging.exception(f"[Monitor] erro: {e}")
             time.sleep(self.interval)
 
-    def check_once(self):
-        # CPU
-        cpu = psutil.cpu_percent(interval=None)
-        if cpu >= self.cpu_threshold:
-            self._alert("cpu_high", {"cpu_percent": cpu})
-
-        # RAM
-        vm = psutil.virtual_memory()
-        ram_percent = vm.percent
-        if ram_percent >= self.ram_threshold:
-            self._alert("ram_high", {"ram_percent": ram_percent, "available": vm.available})
-
-        # Disk usage (root partition)
-        disk = psutil.disk_usage('/')
-        if disk.percent >= self.disk_threshold:
-            self._alert("disk_high", {"disk_percent": disk.percent, "total": disk.total, "free": disk.free})
-
-        # Swap
-        swap = psutil.swap_memory()
-        if swap.percent >= self.swap_threshold:
-            self._alert("swap_high", {"swap_percent": swap.percent})
-
-        # Many processes/threads (heurístico)
-        total_threads = sum(p.num_threads() for p in psutil.process_iter(attrs=[], ad_value=0))
-        if total_threads >= self.high_threads_threshold:
-            self._alert("many_threads", {"total_threads": total_threads})
-
-    def _alert(self, issue_type: str, details: dict):
-        if callable(self.on_alert):
-            try:
-                self.on_alert(issue_type, details)
-            except Exception:
-                # callbacks devem ser resilientes — evitamos que quebrem a thread
-                pass
+    def stop(self):
+        self._running = False
+        logging.info("[Monitor] parando")

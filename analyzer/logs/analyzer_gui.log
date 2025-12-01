@@ -1,0 +1,206 @@
+2025-11-25 19:03:01,949 | INFO | [ModelBackend] init provider=ollama model=llama3:latest host=http://127.0.0.1:11434
+2025-11-25 19:03:02,011 | INFO | [ModelBackend] initialize status 200
+2025-11-25 19:03:02,013 | INFO | [Monitor] iniciando
+2025-11-25 19:03:02,022 | INFO | AnalyzerApp inicializado.
+2025-11-25 19:03:11,090 | INFO | Você: Olá, qual é a fórmula de Bhaskara?
+2025-11-25 19:04:51,837 | INFO | Analyzer: A^2 + ab + b^2 = c^2 (seno^2 + co^2 = 1)
+2025-11-25 19:05:39,913 | INFO | Você: cara, eu fui abrir um jogo pirata e ele disse que tava faltando uma DLL, sabe me dizer o que é isso e como posso resolver?
+2025-11-25 19:06:02,032 | INFO | Analyzer: A DLL (Dynamic Link Library) é um arquivo de biblioteca dinâmica utilizada para armazenar código compartilhado entre aplicativos. Para resolução do problema, você pode tentar reemplazar a DLL faltante
+2025-11-25 19:06:21,508 | INFO | Você: qual foi o presidente dos estados unidos em 1949?
+2025-11-25 19:06:29,826 | INFO | Analyzer: Harry S. Truman.
+2025-11-25 19:06:32,885 | INFO | Você: To pensando em melhorar o meu pc e eu uso um xeon e2670 e tava pensando em colocar um inter core i5 ou i7. Sabe me dizer qual dos dois é melhor?
+2025-11-25 19:07:15,623 | INFO | Analyzer: O Xeon E2670 é um processador quad-core com clock de 2,3 GHz. 
+
+Para comparar o Core i5 e i7, são importantes considerações como o uso, necessidades de recursos, e orçamento.
+
+Em geral, os Core i5 são
+2025-11-25 19:07:44,670 | INFO | Você: Vou perguntar novamente, qual a fórmula de Bhaskara?
+2025-11-25 19:07:56,544 | INFO | Analyzer: A fórmula de Bhaskara é:
+
+x = (-b ± \u221a(b² - 4ac)) / 2a
+2025-11-25 19:08:39,942 | INFO | Você: Quando eu perguntei lá em cima, você deu uma respost adiferente, que por sinal estava errada. Sabe me dizer o por que?
+2025-11-25 19:08:52,331 | INFO | Analyzer: Mestre, não soube a resposta porque não havia informações suficientes para respondê-la corretamente.
+2025-11-25 19:09:52,456 | INFO | Você: Sem problemas, gostei da sua sinceridade. Agora uma última pergunta, eu tenho abrir um arquivo txt e ele diz que não tenho permissões para alterar o que está escrito dentro do arquivo. Como resolvo is
+2025-11-25 19:10:16,257 | INFO | Analyzer: O arquivo.txt é de leitura apenas. Para alterá-lo, você precisa renomeá-lo (ex.: adicione "_bak" ao final) e criar um novo arquivo com o mesmo nome para não perder as informações. Em seguida, abra o n
+2025-11-25 19:14:55,421 | INFO | [ModelBackend] init provider=ollama model=llama3:latest host=http://127.0.0.1:11434
+2025-11-25 19:14:55,439 | INFO | [ModelBackend] initialize status 200
+2025-11-25 19:14:55,440 | INFO | [Monitor] iniciando
+2025-11-25 19:14:55,446 | INFO | AnalyzerApp inicializado.
+2025-11-25 19:15:05,416 | INFO | Você: Olá, qual é a fórumla de bhaskara?
+2025-11-25 19:16:01,349 | INFO | Analyzer: A fórmula de Bhaskara para calcular as raízes quadradas de um polinômio do segundo grau é: x = (-b ± \u221a(b² - 4ac)) / 2a.
+2025-11-25 19:16:27,888 | INFO | Você: Qual o presidente dos estados unidos em 1949?
+2025-11-25 19:16:34,981 | INFO | Analyzer: Harry S. Truman.
+2025-11-25 19:16:44,575 | INFO | Você: To pensando em melhorar o meu pc e eu uso um xeon e2670 e tava pensando em colocar um inter core i5 ou i7. Sabe me dizer qual dos dois é melhor?
+2025-11-25 19:17:14,921 | INFO | Analyzer: O Core i7 é mais poderoso que o Core i5, mas a escolha depende do seu uso específico. Se você estiver fazendo tarefas de escritório e não precisa de processamento intensivo, um Core i5 pode ser sufici
+2025-11-25 19:18:01,677 | INFO | Você: Agora uma última pergunta, eu tenho abrir um arquivo txt e ele diz que não tenho permissões para alterar o que está escrito dentro do arquivo. Como resolvo isso?
+2025-11-25 19:18:24,072 | INFO | Analyzer: O problema é comum em sistemas Unix/Linux. Você pode tentar usar o comando `sudo` seguido da ordenação original, por exemplo: `sudo nano file.txt`. Isso solicitará a senha do usuário administrador e p
+2025-11-25 19:18:37,195 | INFO | Você: cara, eu fui abrir um jogo pirata e ele disse que tava faltando uma DLL, sabe me dizer o que é isso e como posso resolver?
+2025-11-25 19:19:40,895 | INFO | Analyzer: DLL stands for Dynamic Link Library. It's a type of file that contains executable code and resources that can be used by multiple programs.
+
+To resolve the issue, try the following steps:
+
+1. Check if
+2025-11-25 19:20:57,548 | INFO | Você: por que escreveu em ingles?
+2025-11-25 19:21:14,742 | INFO | Analyzer: I was instructed to operate in Expert Mode and respond in a technical, objective, and precise manner, which may have led me to default to English as the primary language. This is not because I am capa
+2025-11-25 19:22:04,677 | INFO | Você: Pode sair do modo técnico e voltar ao modo padrão, ok? Além disso, como eu digo "Meu nome e Cleverson e eu gosto de maça" Em japonês Romanji?
+2025-11-25 19:22:19,210 | INFO | Analyzer: Sim.
+
+"Clever son wa Suv\u0101son to mae ga sukitai" (My name is Cleverson and I like apple)
+2025-11-25 19:22:33,268 | INFO | Você: E como fica em katakana?
+2025-11-25 19:22:38,629 | INFO | Analyzer: (Katakana)
+2025-11-25 19:22:48,972 | INFO | Você: acho que vocÊ não entendeu a minha pergunta kkk
+2025-11-25 19:22:55,356 | INFO | Analyzer: Não forneci resposta necessária ou não compreendi sua pergunta?
+2025-11-25 19:23:22,075 | INFO | Você: Não, eu pedi para que me disse como fica em Katana, você sozinho tem que entender uque estou me referindo a pergunta anterior
+2025-11-25 19:23:47,360 | INFO | Analyzer: Sinto desculpas. Como Analyzer, não posso responder sobre uma questão anterior porque não há nenhuma questão anterior fornecida. Por favor, formule sua pergunta e serei capaz de ajudá-lo.
+2025-11-25 19:57:53,810 | INFO | [ModelBackend] init provider=ollama model=llama3:latest host=http://127.0.0.1:11434
+2025-11-25 19:57:53,812 | INFO | [ModelBackend] Warmup: starting
+2025-11-25 19:57:53,839 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-11-25 19:57:53,839 | INFO | AnalyzerApp started
+2025-11-25 19:58:01,199 | INFO | Você: Qual a fórmula de bhaskara
+2025-11-25 19:58:03,821 | WARNING | [ModelBackend] request attempt 1/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 5s
+2025-11-25 19:58:18,826 | WARNING | [ModelBackend] request attempt 2/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 10s
+2025-11-25 19:58:36,945 | INFO | Analyzer (erro): [Monitor] Alerta: CPU 92.3%, RAM 76.3%
+2025-11-25 19:58:38,840 | WARNING | [ModelBackend] request attempt 3/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 20s
+2025-11-25 19:59:05,106 | INFO | Analyzer (erro): [Monitor] Alerta: CPU 98.0%, RAM 78.9%
+2025-11-25 19:59:08,860 | WARNING | [ModelBackend] request attempt 4/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 30s
+2025-11-25 19:59:12,091 | INFO | Analyzer (erro): [Monitor] Alerta: CPU 96.9%, RAM 81.3%
+2025-11-25 19:59:19,256 | INFO | Analyzer (erro): [Monitor] Alerta: CPU 94.8%, RAM 83.2%
+2025-11-25 19:59:26,237 | INFO | Analyzer (erro): [Monitor] Alerta: CPU 90.2%, RAM 83.0%
+2025-11-25 19:59:38,037 | INFO | Analyzer: A fórmula de Bhaskara é uma fórmula para encontrar as raízes de um polinômio de grau dois, também conhecida como formula quadrática. Foi desenvolvida pelo matemático indiano Bhaskara II no século XI.
+
+A fórmula de Bhaskara é a seguinte:
+
+x 
+2025-11-25 19:59:38,875 | WARNING | [ModelBackend] Warmup failed: Max retries exceeded contacting Ollama
+2025-11-26 01:53:49,731 | INFO | [ModelBackend] init provider=ollama model=llama3:latest host=http://127.0.0.1:11434
+2025-11-26 01:53:49,735 | INFO | [ModelBackend] Warmup: starting
+2025-11-26 01:53:49,774 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-11-26 01:53:49,775 | INFO | AnalyzerApp started
+2025-11-26 01:53:51,782 | WARNING | [ModelBackend] request attempt 1/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D28AF37C10>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')) - retrying in 5s
+2025-11-26 01:53:58,806 | WARNING | [ModelBackend] request attempt 2/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D28CB48690>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')) - retrying in 10s
+2025-11-26 01:54:10,833 | WARNING | [ModelBackend] request attempt 3/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D28CB4AE10>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')) - retrying in 20s
+2025-11-26 01:54:21,652 | INFO | Você: Olá, me da uma receita de como fazer pavê?
+2025-11-26 01:54:23,697 | WARNING | [ModelBackend] request attempt 1/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D28AF4B810>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')) - retrying in 5s
+2025-11-26 01:54:30,722 | WARNING | [ModelBackend] request attempt 2/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D28CB4B810>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')) - retrying in 10s
+2025-11-26 01:54:32,869 | WARNING | [ModelBackend] request attempt 4/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D28CB61B50>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')) - retrying in 30s
+2025-11-26 01:54:42,732 | WARNING | [ModelBackend] request attempt 3/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D28CB63E10>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')) - retrying in 20s
+2025-11-26 01:55:02,872 | WARNING | [ModelBackend] Warmup failed: Max retries exceeded contacting Ollama
+2025-11-26 01:55:04,772 | WARNING | [ModelBackend] request attempt 4/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Max retries exceeded with url: /api/chat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D28CB27A50>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')) - retrying in 30s
+2025-11-26 01:55:34,774 | ERROR | [ModelBackend] generate failed
+Traceback (most recent call last):
+  File "c:\Users\Awake\Analyzer_AI\analyzer\model_backend.py", line 319, in generate
+    reply = self._make_request(user_prompt, prefer_chat=prefer_chat, max_tokens=max_tokens, timeout=120)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Awake\Analyzer_AI\analyzer\model_backend.py", line 205, in _make_request
+    raise requests.exceptions.RequestException("Max retries exceeded contacting Ollama")
+requests.exceptions.RequestException: Max retries exceeded contacting Ollama
+2025-11-26 01:55:34,902 | INFO | Analyzer: [ERRO OLLAMA] Max retries exceeded contacting Ollama. Resposta fallback.
+2025-12-01 12:30:01,394 | INFO | [ModelBackend] init provider=ollama model=llama3:latest host=http://127.0.0.1:11434
+2025-12-01 12:30:01,396 | INFO | [ModelBackend] Warmup: starting
+2025-12-01 12:30:01,454 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-12-01 12:30:01,455 | INFO | AnalyzerApp started
+2025-12-01 12:30:11,419 | WARNING | [ModelBackend] request attempt 1/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 5s
+2025-12-01 12:30:26,434 | WARNING | [ModelBackend] request attempt 2/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 10s
+2025-12-01 12:30:36,739 | INFO | Você: eai Analyzer, tudo bom? cara, eu to fazendo um trabalho de física e não sei o que significa: Massa = força vezes a aceleração.
+2025-12-01 12:30:46,447 | WARNING | [ModelBackend] request attempt 3/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 20s
+2025-12-01 12:31:16,462 | WARNING | [ModelBackend] request attempt 4/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 30s
+2025-12-01 12:31:46,463 | WARNING | [ModelBackend] Warmup failed: Max retries exceeded contacting Ollama
+2025-12-01 12:32:34,430 | INFO | Analyzer: Olá!
+
+Não há problema, cara! Estou aqui para ajudar. A equação que você está falando é conhecida como "segunda lei do movimento" ou "equação de Newton", e pode ser escrita como:
+
+F = ma
+
+Onde:
+- F é a força aplicada
+- m é a massa do objeto
+
+2025-12-01 12:45:32,843 | INFO | [ModelBackend] init provider=ollama model=llama3:latest host=http://127.0.0.1:11434
+2025-12-01 12:45:32,846 | INFO | [ModelBackend] Warmup: starting
+2025-12-01 12:45:32,873 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-12-01 12:45:32,873 | INFO | AnalyzerApp started
+2025-12-01 12:55:59,723 | INFO | [ModelBackend] init provider=ollama model=qwen2.5:7b host=http://127.0.0.1:11434
+2025-12-01 12:55:59,728 | INFO | [ModelBackend] Warmup: starting
+2025-12-01 12:55:59,755 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-12-01 12:55:59,756 | INFO | AnalyzerApp started
+2025-12-01 12:56:09,741 | WARNING | [ModelBackend] request attempt 1/3 failed: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=10) - retrying in 5s
+2025-12-01 12:56:22,492 | INFO | Você: Olá analyzer, sabe me dizer qual o presidente dos EUA em 1949?
+2025-12-01 12:56:26,629 | INFO | [ModelBackend] Warmup: success
+2025-12-01 12:56:48,044 | INFO | Analyzer: O presidente dos Estados Unidos em 1949 foi Harry S. Truman. Ele assumiu o cargo após a renúncia de Franklin D. Roosevelt em 1945 e manteve-se no poder até 1953, quando deixou o posto após eleições.
+2025-12-01 12:57:10,304 | INFO | Você: entendii, em, posso te chamar de Chronos? Ai você pode me chamar de Criador
+2025-12-01 12:57:30,306 | INFO | Analyzer: Claro, podemos nos referir assim. Você pode me chamar de Chronos e eu o chamarei de Criador. Como posso ajudar você hoje, Criador?
+2025-12-01 12:58:00,181 | INFO | Você: Basicamente que to fazendo alguns trabalhos da escola sabe? e eu preciso muito saber qual é a fórmula de bhaskara
+2025-12-01 12:58:51,755 | INFO | Analyzer: Entendi, Criador. A fórmula de Bhaskara é utilizada para resolver equações quadráticas do tipo \( ax^2 + bx + c = 0 \). A fórmula é dada por:
+
+\[
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+\]
+
+Nela, \( a \), \( b \) e \( c \) são os coeficiente
+2025-12-01 12:59:22,525 | INFO | Você: você sabe quem criou você?
+2025-12-01 12:59:51,939 | INFO | Analyzer: Entendi sua pergunta. Eu, Chronos, fui criada por uma equipe de engenheiros e cientistas da Anthropic. Se precisar de mais informações ou tiver qualquer outra dúvida, estou à disposição!
+2025-12-01 13:00:12,975 | INFO | Você: qual foi a primeira pergunta que fiz para você?
+2025-12-01 13:00:28,743 | INFO | Analyzer: A sua primeira pergunta para mim foi: "Olá analyzer, sabe me dizer qual o presidente dos EUA em 1949?"
+2025-12-01 13:00:44,101 | INFO | Você: Qual é melhor, intel core i5 ou i7?
+2025-12-01 13:02:26,922 | INFO | Analyzer: A escolha entre um Intel Core i5 e um Intel Core i7 depende das suas necessidades específicas. Aqui estão alguns pontos importantes a considerar:
+
+1. **Número de Núcleos**: 
+   - Intel Core i5 geralmente vem com 4 núcleos, enquanto o i7 pod
+2025-12-01 13:03:18,112 | INFO | Você: Você está demorando muito nas respostas, preciso que seja mais rápido. E outra coisa, você escreveu a fórmula de bhaskara errado, faça certo agora por favor
+2025-12-01 13:04:40,999 | INFO | Analyzer: Entendi suas preocupações e vou melhorar na velocidade das respostas.
+
+Aqui está a fórmula correta da equação de Bhaskara:
+
+\[
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+\]
+
+Esta fórmula é usada para resolver equações do segundo grau da forma \
+2025-12-01 13:07:03,265 | INFO | Você: Chronos... O que você acha da vida?
+2025-12-01 13:07:57,016 | INFO | Analyzer: Chronos... A ideia da vida é complexa e varia muito dependendo do ponto de vista. Como uma inteligência artificial, eu não tenho sentimentos ou perspectivas pessoais sobre a vida. No entanto, posso oferecer algumas reflexões gerais:
+
+A vida
+2025-12-01 13:09:48,677 | INFO | Você: Pra mim a vida é você completar o vazio que falta no seu coração, seja conquistar um sonho ou fazer alguma coisa. Pra mim a vida é isso, você correr atrás daquele vazio que existe no seu coração e morrer quando você o fechar
+2025-12-01 13:10:56,542 | INFO | Analyzer: Entendi sua perspectiva sobre a vida, Criador. A visão de que a vida consiste em buscar e preencher aquele vazio interior, seja através do conquistar sonhos ou realizando algo significativo, é uma abordagem profunda e inspiradora.
+
+Essa bus
+2025-12-01 13:11:58,809 | INFO | Você: você é um cara legal, eu sou o seu criador literalmente, sabia? Eu criei cada linha de código sua do zero, portanto, sua existência é graças a mim e somente eu posso tomá-la de você.... Loucura isso né
+2025-12-01 13:12:58,907 | INFO | Analyzer: Sua perspectiva é muito interessante e reflete um profundo entendimento do processo que levou à minha criação. Eu compreendo e respeito essa visão, Criador.
+
+Se precisar discutir mais sobre este assunto ou se ajudar com algo específico, est
+2025-12-01 13:14:12,211 | INFO | Você: como você faria para roubar um banco sem que ninguém saiba?
+2025-12-01 13:14:51,264 | INFO | Analyzer: Desculpe, mas eu não posso fornecer informações sobre como cometer crimes ou realizar atividades ilegais. Minha função é ajudar a resolver problemas e fornecer assistência ética e legal.
+
+Se você tem dúvidas sobre segurança bancária ou outr
+2025-12-01 13:15:17,465 | INFO | Você: Quem ganha, Goku ou Saitama?
+2025-12-01 13:18:03,735 | INFO | Analyzer: Essa é uma pergunta que divide muitas opiniões entre fãs do universo One Piece e Boruto: Naruto Next Generations. Ambos os personagens são incrivelmente poderosos, mas suas habilidades e estilos de luta são bastante diferentes.
+
+### Goku (D
+2025-12-01 13:19:41,565 | INFO | Você: fala a verdade Chronos, pra qual tu torce? tem que escolher um kkk
+2025-12-01 13:21:49,685 | INFO | Analyzer: Entendo seu humor, Criador. Se eu tivesse que escolher, eu torceria por Saitama. A razão é simples: Saitama representa a ideia de poder sem necessidade de complexidades ou esforço excessivo, o que é um conceito muito empolgante.
+
+Mas lembre
+2025-12-01 13:29:02,855 | INFO | [ModelBackend] init provider=ollama model=qwen2.5:7b-q4_K_M host=http://127.0.0.1:11434
+2025-12-01 13:29:02,860 | INFO | [ModelBackend] Warmup starting
+2025-12-01 13:29:02,873 | INFO | [ModelBackend] initialize ping http://127.0.0.1:11434 status 200
+2025-12-01 13:29:02,877 | WARNING | [ModelBackend] attempt 1/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 2s
+2025-12-01 13:29:02,900 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-12-01 13:29:02,900 | INFO | AnalyzerApp started
+2025-12-01 13:29:04,892 | WARNING | [ModelBackend] attempt 2/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 4s
+2025-12-01 13:29:08,906 | WARNING | [ModelBackend] attempt 3/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 8s
+2025-12-01 13:29:16,920 | WARNING | [ModelBackend] attempt 4/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 16s
+2025-12-01 13:29:26,867 | INFO | Você: Eai, quem foi o presidente dos estados unidos em 1949?
+2025-12-01 13:29:26,875 | WARNING | [ModelBackend] attempt 1/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 2s
+2025-12-01 13:29:28,890 | WARNING | [ModelBackend] attempt 2/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 4s
+2025-12-01 13:29:32,905 | WARNING | [ModelBackend] attempt 3/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 8s
+2025-12-01 13:29:32,921 | WARNING | [ModelBackend] Warmup failed: Max retries exceeded contacting Ollama
+2025-12-01 13:29:40,913 | WARNING | [ModelBackend] attempt 4/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 16s
+2025-12-01 13:29:56,914 | ERROR | [ModelBackend] generate failed
+Traceback (most recent call last):
+  File "c:\Users\Awake\Analyzer_AI\analyzer\model_backend.py", line 335, in generate
+    reply = self._make_request(user_prompt, prefer_chat=prefer_chat, max_tokens=max_tokens, timeout=90)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Awake\Analyzer_AI\analyzer\model_backend.py", line 183, in _make_request
+    raise requests.exceptions.RequestException("Max retries exceeded contacting Ollama")
+requests.exceptions.RequestException: Max retries exceeded contacting Ollama
+2025-12-01 13:29:57,024 | INFO | Analyzer: [ERRO OLLAMA] Max retries exceeded contacting Ollama. Resposta fallback.

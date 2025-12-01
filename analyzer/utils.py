@@ -1,9 +1,11 @@
-
+# analyzer/utils.py
 import threading
-import queue
 
-def run_in_thread(fn, daemon=True):
-
-    t = threading.thread(target=fn, daemon=daemon)
+def run_in_thread(fn, daemon: bool = True):
+    """
+    Executa função fn em thread separada e inicia imediatamente.
+    Retorna objeto Thread.
+    """
+    t = threading.Thread(target=fn, daemon=daemon)
     t.start()
     return t
