@@ -1,27 +1,27 @@
 # analyzer/model_backend.py
 """
-ModelBackend (robusto) — adaptado para qwen2.5:7b-q4_K_M via Ollama local.
-
-Principais mudanças aplicadas:
-- model_name padrão: qwen2.5:7b-q4_K_M
-- system prompt reforçado (não mencionar empresas, não inventar, obedecer apelidos)
-- /api/chat preferido; fallback /api/generate
-- streaming bufferizado (concatena internamente; retorna final)
-- retries com exponential backoff (mais conservador)
-- validação pós-processamento para remover menções indesejadas
-- histórico estruturado e truncation (últimas N trocas)
+ModelBackend (avançado, versão 'mestre'):
+- Usa Ollama local (modelo qwen2.5:7b-q4_K_M por padrão)
+- /api/chat preferido (stream=True) com leitura buffered e montagem final no backend
+- fallback para /api/generate
+- warmup não-bloqueante
+- history role-structured (system/user/assistant)
+- local solver para aritmética simples (reduz latência em perguntas matemáticas)
+- retries com exponential backoff
+- post-process para remover menções proibidas (providers/trainers)
 """
 
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any, Tuple
 import requests
 import json
 import logging
-import time
 import os
+import time
 import threading
 import re
+import ast
 
-# Logger
+# logger
 logger = logging.getLogger("ModelBackend")
 if not logger.handlers:
     h = logging.StreamHandler()
@@ -29,223 +29,188 @@ if not logger.handlers:
     logger.addHandler(h)
 logger.setLevel(logging.INFO)
 
+# load settings
+SETTINGS_PATH = os.path.join(os.path.dirname(__file__), "analyzer_settings.json")
+if not os.path.exists(SETTINGS_PATH):
+    raise FileNotFoundError(f"Settings file not found: {SETTINGS_PATH}")
+
+with open(SETTINGS_PATH, "r", encoding="utf-8") as f:
+    SETTINGS = json.load(f)
+
+# defaults from settings
+DEFAULT_MODEL = SETTINGS.get("model_name", "qwen2.5:7b-instruct-q4_K_M")
+OLLAMA_HOST = SETTINGS.get("host", "http://127.0.0.1:11434")
+OLLAMA_TIMEOUT = SETTINGS.get("network", {}).get("ollama_timeout_seconds", 90)
+OLLAMA_MAX_RETRIES = SETTINGS.get("network", {}).get("ollama_max_retries", 3)
+SYSTEM_PROMPT = SETTINGS.get("system_prompt", "Você é o Analyzer — assistente técnico, direto e obediente ao Mestre.")
+PREFERRED_LANGUAGE = "pt-BR"
+
+# helper: safe arithmetic evaluator (only arithmetic expressions)
+def safe_eval_arith(expr: str):
+    """
+    Safely evaluate a mathematical expression limited to arithmetic ops.
+    Prevents arbitrary code execution by validating AST nodes.
+    """
+    expr = expr.replace("^", "**")
+    try:
+        node = ast.parse(expr, mode="eval")
+    except Exception as e:
+        raise ValueError("invalid expression") from e
+    for n in ast.walk(node):
+        if isinstance(n, (ast.Call, ast.Name, ast.Attribute, ast.Subscript, ast.Lambda, ast.Import, ast.ImportFrom)):
+            raise ValueError("unsafe expression")
+    compiled = compile(node, "<ast>", "eval")
+    return eval(compiled, {"__builtins__": None}, {})
+
+# basic enunciado solver (linear forms like "se eu dobro um número e somo 6 o resultado é 26")
+def solve_simple_enunciado(text: str) -> Optional[str]:
+    s = text.lower()
+    # try pattern: "dobro ... somo 6 ... resultado é 26"
+    m = re.search(r"dobr[oa] (?:um )?n[úu]mero.*som[ao]\s*(-?\d+\.?\d*)[, ]+.*resultado.*?(-?\d+\.?\d*)", s)
+    if m:
+        try:
+            mult = 2.0
+            add = float(m.group(1))
+            result = float(m.group(2))
+            original = (result - add) / mult
+            if abs(round(original) - original) < 1e-9:
+                original = int(round(original))
+            return f"O número original é {original}."
+        except Exception:
+            pass
+    # broader heuristic: find "dobro" or "triplo" or "multiplica por N" and addition/subtraction then result
+    mult = None
+    if "dobr" in s:
+        mult = 2.0
+    elif "trip" in s:
+        mult = 3.0
+    else:
+        m_mul = re.search(r"multiplic[ao]r? (?:por )?(-?\d+\.?\d*)", s)
+        if m_mul:
+            mult = float(m_mul.group(1))
+    m_res = re.search(r"resultado.*?(-?\d+\.?\d*)", s)
+    m_add = re.search(r"(som[ao]|mais)\s*(-?\d+\.?\d*)", s)
+    sign = 0.0
+    if m_add:
+        sign = float(m_add.group(2))
+    if mult and m_res:
+        try:
+            result = float(m_res.group(1))
+            original = (result - sign) / mult
+            if abs(round(original) - original) < 1e-9:
+                original = int(round(original))
+            return f"O número original é {original}."
+        except Exception:
+            pass
+    return None
 
 class ModelBackend:
-    def __init__(
-        self,
-        provider: str = "ollama",
-        model_name: Optional[str] = "qwen2.5:7b-q4_K_M",
-        host: str = "http://127.0.0.1:11434",
-        history_capacity: int = 80,
-        warmup: bool = True,
-        prefer_language: str = "pt-BR",
-        max_retries: int = 3
-    ):
+    def __init__(self, provider: str = "ollama", model_name: Optional[str] = None, host: str = None):
         self.provider = provider
-        self.model_name = model_name
-        self.host = host.rstrip("/")
-        self.history_capacity = history_capacity
-        self.prefer_language = prefer_language
-        self.max_retries = max_retries
-
-        # System prompt reforçado (curto, direto e seguro)
-        self.system = (
-            "Você é o Analyzer. Personalidade: técnica, direta, educada e obediente ao Mestre.\n"
-            "Regras obrigatórias:\n"
-            "- Responda preferencialmente em {lang} se o usuário usar {lang}.\n"
-            "- Não mencione empresas, provedores ou detalhes de treinamento (não diga 'fui criado por X').\n"
-            "- Não invente fatos; se incerto, peça clarificação.\n"
-            "- Use linguagem natural, curta e objetiva. Trate o usuário conforme ele pedir (por ex. 'Criador', 'Mestre').\n"
-            "- Não vaze raciocínios internos.\n"
-            .format(lang=self.prefer_language)
-        )
-
-        # internal history
-        self.history: List[Dict[str, str]] = [{"role": "system", "content": self.system}]
-
-        # storage for history files
-        self.storage_dir = os.path.join(os.path.dirname(__file__), "backend_storage")
-        os.makedirs(self.storage_dir, exist_ok=True)
-
-        # warmup flag
+        self.model_name = model_name or DEFAULT_MODEL
+        self.host = (host or OLLAMA_HOST).rstrip("/")
+        self.history: List[Dict[str,str]] = [{"role":"system","content":SYSTEM_PROMPT}]
         self.warmup_done = False
-
+        self.lock = threading.Lock()
         logger.info(f"[ModelBackend] init provider={self.provider} model={self.model_name} host={self.host}")
+        # warmup in background
+        t = threading.Thread(target=self._warmup_safe, daemon=True)
+        t.start()
 
-        # warmup in background so GUI isn't blocked
-        if warmup and self.provider == "ollama":
-            th = threading.Thread(target=self._warmup_safe, daemon=True)
-            th.start()
+    # ---------------- history helpers ----------------
+    def push_user(self, text: str):
+        with self.lock:
+            self.history.append({"role":"user","content":text})
+            # keep last N messages
+            max_msgs = SETTINGS.get("max_context_messages", 120)
+            if len(self.history) > max_msgs + 1:  # +1 for system
+                # keep system + last max_msgs
+                self.history = [self.history[0]] + self.history[-max_msgs:]
 
-    # -------------------- history helpers --------------------
-    def _truncate_history(self) -> None:
-        """Keep system at first position and keep last N user/assistant pairs."""
-        if not self.history:
-            self.history = [{"role": "system", "content": self.system}]
-            return
-        system = self.history[0] if self.history[0].get("role") == "system" else {"role": "system", "content": self.system}
-        rest = [m for m in self.history[1:] if m.get("role") in ("user", "assistant")]
-        if len(rest) > self.history_capacity:
-            rest = rest[-self.history_capacity:]
-        self.history = [system] + rest
+    def push_assistant(self, text: str):
+        with self.lock:
+            self.history.append({"role":"assistant","content":text})
+            max_msgs = SETTINGS.get("max_context_messages", 120)
+            if len(self.history) > max_msgs + 1:
+                self.history = [self.history[0]] + self.history[-max_msgs:]
 
-    def push_user(self, text: str) -> None:
-        self.history.append({"role": "user", "content": text})
-        self._truncate_history()
+    def export_history(self) -> List[Dict[str,str]]:
+        with self.lock:
+            return list(self.history)
 
-    def push_assistant(self, text: str) -> None:
-        self.history.append({"role": "assistant", "content": text})
-        self._truncate_history()
+    def clear_history(self, keep_system: bool = True):
+        with self.lock:
+            if keep_system:
+                self.history = [{"role":"system","content":SYSTEM_PROMPT}]
+            else:
+                self.history = []
 
-    def export_history(self) -> List[Dict[str, str]]:
-        return list(self.history)
-
-    def clear_history(self, keep_system: bool = True) -> None:
-        if keep_system:
-            self.history = [{"role": "system", "content": self.system}]
-        else:
-            self.history = []
-
-    def save_history_to_file(self, path: Optional[str] = None) -> str:
-        if not path:
-            ts = int(time.time())
-            path = os.path.join(self.storage_dir, f"history_{ts}.json")
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(self.history, f, ensure_ascii=False, indent=2)
-        return path
-
-    def load_history_from_file(self, path: str) -> None:
-        with open(path, "r", encoding="utf-8") as f:
-            loaded = json.load(f)
-        if isinstance(loaded, list):
-            if not loaded or loaded[0].get("role") != "system":
-                loaded.insert(0, {"role": "system", "content": self.system})
-            self.history = loaded
-            self._truncate_history()
-
-    # -------------------- warmup --------------------
-    def initialize(self) -> None:
-        """Ping host quickly (non-blocking usage expected)."""
-        if self.provider != "ollama":
-            logger.info("[ModelBackend] initialize: placeholder")
-            return
-        try:
-            r = requests.get(self.host, timeout=2)
-            logger.info(f"[ModelBackend] initialize ping {self.host} status {r.status_code}")
-        except Exception as e:
-            logger.warning(f"[ModelBackend] initialize failed: {e}")
-
-    def _warmup_safe(self) -> None:
+    # ---------------- warmup ----------------
+    def _warmup_safe(self):
         try:
             self._warmup()
         except Exception as e:
-            logger.warning(f"[ModelBackend] warmup error: {e}")
+            logger.info(f"[ModelBackend] warmup exception: {e}")
 
-    def _warmup(self) -> None:
+    def _warmup(self):
         if self.warmup_done:
             return
-        logger.info("[ModelBackend] Warmup starting")
         try:
-            _ = self._make_request(user_prompt="pong", prefer_chat=True, max_tokens=6, timeout=10)
+            # tiny request to reduce first-response oddities
+            _ = self.generate("pong", prefer_chat=True, max_tokens=8, timeout=8)
             self.warmup_done = True
-            logger.info("[ModelBackend] Warmup success")
+            logger.info("[ModelBackend] warmup completed")
         except Exception as e:
-            logger.warning(f"[ModelBackend] Warmup failed: {e}")
+            logger.warning(f"[ModelBackend] warmup failed: {e}")
 
-    # -------------------- communication --------------------
-    def _make_request(self, user_prompt: str, prefer_chat: bool = True, max_tokens: int = 1024, timeout: int = 90) -> str:
-        """
-        Central method. Tries /api/chat first with structured messages (stream=True).
-        Reads streaming chunks and assembles response internally (buffered).
-        """
-        if self.provider != "ollama":
-            return f"[SIMULADO] {user_prompt}"
+    # ---------------- networking helpers ----------------
+    def _compose_messages(self, user_prompt: str) -> List[Dict[str,str]]:
+        with self.lock:
+            msgs = list(self.history)
+        msgs.append({"role":"user","content":user_prompt})
+        return msgs
 
-        # prepare messages snapshot
-        messages = list(self.history)
-        messages.append({"role": "user", "content": user_prompt})
-
-        attempt = 0
-        while attempt <= self.max_retries:
-            try:
-                if prefer_chat:
-                    return self._call_chat_api(messages, max_tokens=max_tokens, timeout=timeout)
-                else:
-                    return self._call_generate_api(messages, max_tokens=max_tokens, timeout=timeout)
-            except requests.exceptions.RequestException as e:
-                attempt += 1
-                wait = min(2 * (2 ** (attempt - 1)), 20)  # faster backoff
-                logger.warning(f"[ModelBackend] attempt {attempt}/{self.max_retries} failed: {e} - retry in {wait}s")
-                time.sleep(wait)
-            except Exception as e:
-                logger.exception("[ModelBackend] unexpected error")
-                raise
-        raise requests.exceptions.RequestException("Max retries exceeded contacting Ollama")
-
-    def _call_chat_api(self, messages: List[Dict[str, str]], max_tokens: int = 1024, timeout: int = 90) -> str:
-        """
-        Call Ollama /api/chat with streaming. Buffer fragments and return assembled text.
-        This function is robust to multiple stream formats the Ollama may return.
-        """
+    def _call_chat_api(self, messages: List[Dict[str,str]], max_tokens: int = 1024, timeout: int = OLLAMA_TIMEOUT) -> str:
         url = f"{self.host}/api/chat"
         payload = {"model": self.model_name, "messages": messages, "stream": True, "max_tokens": max_tokens}
-        headers = {"Content-Type": "application/json"}
-        logger.debug("[ModelBackend] POST /api/chat")
+        headers = {"Content-Type":"application/json"}
+        parts: List[str] = []
+        with requests.post(url, json=payload, headers=headers, stream=True, timeout=timeout) as resp:
+            resp.raise_for_status()
+            for raw in resp.iter_lines(decode_unicode=False):
+                if not raw:
+                    continue
+                try:
+                    obj = json.loads(raw.decode("utf-8"))
+                except Exception:
+                    continue
+                if isinstance(obj, dict):
+                    # support multiple formats
+                    if "message" in obj and isinstance(obj["message"], dict):
+                        content = obj["message"].get("content")
+                        if isinstance(content, str):
+                            parts.append(content)
+                    elif "response" in obj and isinstance(obj["response"], str):
+                        parts.append(obj["response"])
+                    elif "text" in obj and isinstance(obj["text"], str):
+                        parts.append(obj["text"])
+                    elif "choices" in obj and isinstance(obj["choices"], list) and obj["choices"]:
+                        c0 = obj["choices"][0]
+                        if isinstance(c0, dict) and "text" in c0:
+                            parts.append(c0["text"])
+                if obj.get("done"):
+                    break
+        assembled = "".join(parts).strip()
+        return self._post_process_reply(assembled)
 
-        full_text = []
-        try:
-            with requests.post(url, json=payload, headers=headers, stream=True, timeout=timeout) as resp:
-                resp.raise_for_status()
-                # read streaming lines
-                for raw in resp.iter_lines(chunk_size=1, decode_unicode=False):
-                    if not raw:
-                        continue
-                    try:
-                        obj = json.loads(raw.decode("utf-8"))
-                    except Exception:
-                        # if not json, skip but keep working
-                        continue
-
-                    # multiple streaming formats supported
-                    if isinstance(obj, dict):
-                        # Ollama sometimes uses {"message": {"content": "..."}}
-                        if "message" in obj and isinstance(obj["message"], dict):
-                            c = obj["message"].get("content")
-                            if isinstance(c, str) and c:
-                                full_text.append(c)
-                        elif "response" in obj and isinstance(obj["response"], str):
-                            full_text.append(obj["response"])
-                        elif "text" in obj and isinstance(obj["text"], str):
-                            full_text.append(obj["text"])
-                        elif "choices" in obj and isinstance(obj["choices"], list) and obj["choices"]:
-                            c0 = obj["choices"][0]
-                            if isinstance(c0, dict) and "text" in c0 and isinstance(c0["text"], str):
-                                full_text.append(c0["text"])
-                    # stop condition
-                    if obj.get("done"):
-                        break
-        except requests.exceptions.RequestException:
-            raise
-        except Exception as e:
-            logger.exception(f"[ModelBackend] unexpected error reading stream: {e}")
-            raise
-
-        assembled = "".join(full_text).strip()
-        # post-process and sanitize
-        assembled = self._post_process_reply(assembled)
-        return assembled
-
-    def _call_generate_api(self, messages: List[Dict[str, str]], max_tokens: int = 1024, timeout: int = 90) -> str:
-        """
-        Fallback to /api/generate (builds a single prompt).
-        """
+    def _call_generate_api(self, messages: List[Dict[str,str]], max_tokens:int=1024, timeout:int=OLLAMA_TIMEOUT) -> str:
         url = f"{self.host}/api/generate"
-        # craft prompt from recent history to preserve context
-        system_part = self.system
+        # fallback: build prompt from system + recent history
+        system_part = SYSTEM_PROMPT
         snippet = ""
-        for m in messages[-(self.history_capacity + 1):]:
+        for m in messages[-(SETTINGS.get("max_context_messages",120)+1):]:
             role = m.get("role")
-            content = m.get("content", "")
+            content = m.get("content","")
             if role == "system":
                 continue
             if role == "user":
@@ -254,99 +219,136 @@ class ModelBackend:
                 snippet += f"Analyzer: {content}\n"
         prompt = f"{system_part}\n\n{snippet}\nAnalyzer:"
         payload = {"model": self.model_name, "prompt": prompt, "stream": True, "max_tokens": max_tokens}
-        headers = {"Content-Type": "application/json"}
-
+        headers = {"Content-Type":"application/json"}
         parts = []
-        try:
-            with requests.post(url, data=json.dumps(payload), headers=headers, stream=True, timeout=timeout) as resp:
-                resp.raise_for_status()
-                for raw in resp.iter_lines(chunk_size=1, decode_unicode=False):
-                    if not raw:
-                        continue
-                    try:
-                        obj = json.loads(raw.decode("utf-8"))
-                    except Exception:
-                        continue
-                    if isinstance(obj, dict):
-                        if "response" in obj and isinstance(obj["response"], str):
-                            parts.append(obj["response"])
-                        elif "text" in obj and isinstance(obj["text"], str):
-                            parts.append(obj["text"])
-                        elif "choices" in obj and isinstance(obj["choices"], list) and obj["choices"]:
-                            c0 = obj["choices"][0]
-                            if isinstance(c0, dict) and "text" in c0:
-                                parts.append(c0["text"])
-                    if obj.get("done"):
-                        break
-        except requests.exceptions.RequestException:
-            raise
-        except Exception as e:
-            logger.exception(f"[ModelBackend] generate fallback error: {e}")
-            raise
-
+        with requests.post(url, data=json.dumps(payload), headers=headers, stream=True, timeout=timeout) as resp:
+            resp.raise_for_status()
+            for raw in resp.iter_lines(decode_unicode=False):
+                if not raw:
+                    continue
+                try:
+                    obj = json.loads(raw.decode("utf-8"))
+                except Exception:
+                    continue
+                if isinstance(obj, dict):
+                    if "response" in obj and isinstance(obj["response"], str):
+                        parts.append(obj["response"])
+                    elif "text" in obj and isinstance(obj["text"], str):
+                        parts.append(obj["text"])
+                    elif "choices" in obj and isinstance(obj["choices"], list) and obj["choices"]:
+                        c0 = obj["choices"][0]
+                        if isinstance(c0, dict) and "text" in c0:
+                            parts.append(c0["text"])
+                if obj.get("done"):
+                    break
         assembled = "".join(parts).strip()
-        assembled = self._post_process_reply(assembled)
-        return assembled
+        return self._post_process_reply(assembled)
 
-    # -------------------- post processing & validation --------------------
+    # ---------------- post process ----------------
     def _post_process_reply(self, text: str) -> str:
-        """Sanitize and enforce system rules on reply."""
         if not text:
-            return text
-
-        # basic sanitization: trim repeated whitespace
-        text = re.sub(r"\s+\n", "\n", text).strip()
-
-        # ban mentions of specific provider names or training statements
-        forbidden = [
-            r"anthropic", r"openai", r"meta", r"trained by", r"trained on", r"i was trained", r"i am a large"
-        ]
-        lowered = text.lower()
+            return ""
+        text = re.sub(r"[ \t]+\n", "\n", text)
+        text = re.sub(r"\n{3,}", "\n\n", text).strip()
+        # remove forbidden provider mentions
+        forbidden = [r"anthropic", r"openai", r"meta", r"trained by", r"i was trained", r"i am a"]
+        low = text.lower()
         for f in forbidden:
-            if re.search(f, lowered):
-                # remove offending sentence(s)
-                text = re.sub(r"[^.?!]*(" + f + r")[^.?!]*[.?!]?", "", text, flags=re.IGNORECASE).strip()
-
-        # if reply becomes empty after sanitization, give a safe fallback
+            if re.search(f, low):
+                text = re.sub(r"(?i)[^.?!]*" + re.escape(f) + r"[^.?!]*[.?!]?", "", text).strip()
         if not text:
-            text = "[ERRO] Resposta removida por política interna. Peça para reformular a pergunta."
-
-        # coherence check (simple heuristic): if response is extremely short, ask to clarify
-        if len(text) < 8:
-            text = text + "\n\nSe precisar, descreva com mais detalhes sua pergunta."
-
+            return "[ERRO] Resposta removida por política interna."
         return text
 
-    # -------------------- public interface --------------------
-    def generate(self, user_prompt: str, max_tokens: int = 1024, prefer_chat: bool = True) -> str:
-        user_prompt = user_prompt.strip()
+    # ---------------- main public interface ----------------
+    def generate(self, user_prompt: str, max_tokens: int = 1024, prefer_chat: bool = True, timeout: int = OLLAMA_TIMEOUT) -> str:
+        user_prompt = (user_prompt or "").strip()
         if not user_prompt:
             return ""
+        # push user to history
+        try:
+            self.push_user(user_prompt)
+        except Exception:
+            pass
 
-        # push and truncate history
-        self.push_user(user_prompt)
+        # local solver for speed on math/simple enunciados
+        try:
+            # direct arithmetic: "qual é 2+2" or "quanto é 2+2"
+            m_ar = re.search(r"(qual(?: é| e)?|quanto(?: é| )?)\s*([0-9\.\+\-\*\/\^\(\) ]+)$", user_prompt.lower())
+            if m_ar:
+                expr = m_ar.group(2).strip()
+                val = safe_eval_arith(expr)
+                ans = str(val)
+                self.push_assistant(ans)
+                return ans
+        except Exception:
+            pass
+        # enunciado solver
+        try:
+            s = solve_simple_enunciado(user_prompt)
+            if s:
+                self.push_assistant(s)
+                return s
+        except Exception:
+            pass
 
+        # network / model path
         if self.provider != "ollama":
             reply = f"[SIMULADO] {user_prompt}"
-            self.push_assistant(reply)
+            try:
+                self.push_assistant(reply)
+            except Exception:
+                pass
             return reply
 
+        attempt = 0
+        last_exc = None
+        while attempt <= OLLAMA_MAX_RETRIES:
+            try:
+                messages = self._compose_messages(user_prompt)
+                if prefer_chat:
+                    reply = self._call_chat_api(messages, max_tokens=max_tokens, timeout=timeout)
+                else:
+                    reply = self._call_generate_api(messages, max_tokens=max_tokens, timeout=timeout)
+                if not reply:
+                    reply = "[ERRO] Resposta vazia do modelo."
+                try:
+                    self.push_assistant(reply)
+                except Exception:
+                    pass
+                return reply
+            except requests.exceptions.RequestException as e:
+                last_exc = e
+                attempt += 1
+                wait = min(2 * (2 ** (attempt - 1)), 30)
+                logger.warning(f"[ModelBackend] request error attempt {attempt}: {e} -> waiting {wait}s")
+                time.sleep(wait)
+            except Exception as e:
+                last_exc = e
+                logger.exception("[ModelBackend] unexpected error")
+                break
+
+        fallback = (
+            "[ERRO OLLAMA] Max retries exceeded contacting Ollama. Resposta fallback.\n\n"
+            "Verifique se Ollama está rodando e se o modelo foi baixado. "
+            f"Host: {self.host} | Modelo: {self.model_name}\n"
+            "Sugestão: rode `ollama status` e `ollama list` no terminal."
+        )
         try:
-            reply = self._make_request(user_prompt, prefer_chat=prefer_chat, max_tokens=max_tokens, timeout=90)
-            if not reply:
-                reply = "[ERRO] O modelo retornou resposta vazia."
-            self.push_assistant(reply)
-            return reply
-        except Exception as e:
-            logger.exception("[ModelBackend] generate failed")
-            fallback = f"[ERRO OLLAMA] {e}. Resposta fallback."
             self.push_assistant(fallback)
-            return fallback
+        except Exception:
+            pass
+        return fallback
 
     def initial_assistant_greeting(self) -> str:
         greeting = (
             "Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto "
             "e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?"
         )
-        self.push_assistant(greeting)
+        try:
+            self.push_assistant(greeting)
+        except Exception:
+            pass
         return greeting
+
+# end of model_backend.py

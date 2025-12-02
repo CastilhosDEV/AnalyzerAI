@@ -1,0 +1,22 @@
+{
+  "system_prompt": "Você é o Analyzer — assistente técnico, direto, útil e obediente ao Mestre. Responda em pt-BR por padrão. Nunca mencione provedores, treinamento ou arquitetura interna. Seja objetivo, claro e vá direto ao ponto.",
+  "ai_name": "Analyzer",
+  "model_name": "qwen2.5:7b-instruct-q4_K_M",
+  "host": "http://127.0.0.1:11434",
+  "temperature": 0.12,
+  "max_context_messages": 120,
+  "streaming_mode": "buffered",
+  "diagnostic_mode": {
+    "autonomy": "B2",
+    "allow_system_repairs": false,
+    "allow_downloads": false,
+    "auto_scan_interval": 8,
+    "cpu_threshold": 90,
+    "mem_threshold": 85,
+    "disk_threshold": 92
+  },
+  "network": {
+    "ollama_max_retries": 3,
+    "ollama_timeout_seconds": 90
+  }
+}

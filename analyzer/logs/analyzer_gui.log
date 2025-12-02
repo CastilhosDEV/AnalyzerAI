@@ -204,3 +204,145 @@ Traceback (most recent call last):
     raise requests.exceptions.RequestException("Max retries exceeded contacting Ollama")
 requests.exceptions.RequestException: Max retries exceeded contacting Ollama
 2025-12-01 13:29:57,024 | INFO | Analyzer: [ERRO OLLAMA] Max retries exceeded contacting Ollama. Resposta fallback.
+2025-12-01 16:34:28,291 | INFO | [ModelBackend] init provider=ollama model=qwen2.5:7b-q4_K_M host=http://127.0.0.1:11434
+2025-12-01 16:34:28,295 | INFO | [ModelBackend] Warmup starting
+2025-12-01 16:34:28,307 | INFO | [ModelBackend] initialize ping http://127.0.0.1:11434 status 200
+2025-12-01 16:34:28,312 | WARNING | [ModelBackend] attempt 1/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 2s
+2025-12-01 16:34:28,368 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-12-01 16:34:28,370 | INFO | AnalyzerApp started
+2025-12-01 16:34:30,319 | WARNING | [ModelBackend] attempt 2/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 4s
+2025-12-01 16:34:34,335 | WARNING | [ModelBackend] attempt 3/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 8s
+2025-12-01 16:34:42,343 | WARNING | [ModelBackend] attempt 4/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 16s
+2025-12-01 16:34:55,275 | INFO | Você: Analyzer, qual foi o apelido que eu pedi para você me chamar anteriormente?
+2025-12-01 16:34:55,282 | WARNING | [ModelBackend] attempt 1/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 2s
+2025-12-01 16:34:57,289 | WARNING | [ModelBackend] attempt 2/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 4s
+2025-12-01 16:34:58,344 | WARNING | [ModelBackend] Warmup failed: Max retries exceeded contacting Ollama
+2025-12-01 16:35:01,297 | WARNING | [ModelBackend] attempt 3/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 8s
+2025-12-01 16:35:09,307 | WARNING | [ModelBackend] attempt 4/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 16s
+2025-12-01 16:35:25,307 | ERROR | [ModelBackend] generate failed
+Traceback (most recent call last):
+  File "c:\Users\Awake\Analyzer_AI\analyzer\model_backend.py", line 335, in generate
+    reply = self._make_request(user_prompt, prefer_chat=prefer_chat, max_tokens=max_tokens, timeout=90)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Awake\Analyzer_AI\analyzer\model_backend.py", line 183, in _make_request
+    raise requests.exceptions.RequestException("Max retries exceeded contacting Ollama")
+requests.exceptions.RequestException: Max retries exceeded contacting Ollama
+2025-12-01 16:35:25,477 | INFO | Analyzer: [ERRO OLLAMA] Max retries exceeded contacting Ollama. Resposta fallback.
+2025-12-01 16:35:40,672 | INFO | Você: Se eu dobro um número e depois somo 6, o resultado é 26. Qual era o número original?
+2025-12-01 16:35:40,680 | WARNING | [ModelBackend] attempt 1/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 2s
+2025-12-01 16:35:42,688 | WARNING | [ModelBackend] attempt 2/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 4s
+2025-12-01 16:35:46,702 | WARNING | [ModelBackend] attempt 3/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 8s
+2025-12-01 16:35:54,710 | WARNING | [ModelBackend] attempt 4/3 failed: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat - retry in 16s
+2025-12-01 16:36:10,711 | ERROR | [ModelBackend] generate failed
+Traceback (most recent call last):
+  File "c:\Users\Awake\Analyzer_AI\analyzer\model_backend.py", line 335, in generate
+    reply = self._make_request(user_prompt, prefer_chat=prefer_chat, max_tokens=max_tokens, timeout=90)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Awake\Analyzer_AI\analyzer\model_backend.py", line 183, in _make_request
+    raise requests.exceptions.RequestException("Max retries exceeded contacting Ollama")
+requests.exceptions.RequestException: Max retries exceeded contacting Ollama
+2025-12-01 16:36:10,850 | INFO | Analyzer: [ERRO OLLAMA] Max retries exceeded contacting Ollama. Resposta fallback.
+2025-12-02 01:58:47,863 | INFO | [ModelBackend] init provider=ollama model=qwen2.5:7b-q4_K_M host=http://127.0.0.1:11434
+2025-12-02 01:58:47,867 | INFO | [Monitor] starting monitor (autonomy=B2) interval=8s
+2025-12-02 01:58:47,881 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-12-02 01:58:47,881 | INFO | AnalyzerApp initialized
+2025-12-02 01:58:47,917 | WARNING | [ModelBackend] request error attempt 1: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 2s
+2025-12-02 01:58:49,431 | INFO | Analyzer (Monitor): heartbeat CPU 16.3% MEM 32.9% DISK 84.7%
+2025-12-02 01:58:49,926 | WARNING | [ModelBackend] request error attempt 2: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 4s
+2025-12-02 01:58:53,940 | WARNING | [ModelBackend] request error attempt 3: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 8s
+2025-12-02 01:58:58,623 | INFO | Analyzer (Monitor): heartbeat CPU 6.4% MEM 30.5% DISK 84.7%
+2025-12-02 01:59:01,955 | WARNING | [ModelBackend] request error attempt 4: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 16s
+2025-12-02 01:59:07,625 | INFO | Analyzer (Monitor): heartbeat CPU 3.0% MEM 31.0% DISK 84.7%
+2025-12-02 01:59:16,620 | INFO | Analyzer (Monitor): heartbeat CPU 4.5% MEM 31.6% DISK 84.7%
+2025-12-02 01:59:17,957 | INFO | [ModelBackend] warmup completed
+2025-12-02 01:59:23,671 | INFO | Você: Olá Analyzer, tuod bem? Consegue limpar o cache da minha memória por favor?
+2025-12-02 01:59:23,684 | WARNING | [ModelBackend] request error attempt 1: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 2s
+2025-12-02 01:59:25,637 | INFO | Analyzer (Monitor): heartbeat CPU 3.0% MEM 31.6% DISK 84.7%
+2025-12-02 01:59:25,696 | WARNING | [ModelBackend] request error attempt 2: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 4s
+2025-12-02 01:59:29,710 | WARNING | [ModelBackend] request error attempt 3: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 8s
+2025-12-02 01:59:34,642 | INFO | Analyzer (Monitor): heartbeat CPU 10.6% MEM 32.1% DISK 84.7%
+2025-12-02 01:59:37,718 | WARNING | [ModelBackend] request error attempt 4: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 16s
+2025-12-02 01:59:43,797 | INFO | Analyzer (Monitor): heartbeat CPU 2.1% MEM 32.1% DISK 84.7%
+2025-12-02 01:59:52,768 | INFO | Analyzer (Monitor): heartbeat CPU 6.5% MEM 32.0% DISK 84.7%
+2025-12-02 01:59:53,855 | INFO | Analyzer: [ERRO OLLAMA] Max retries exceeded contacting Ollama. Resposta fallback.
+
+Verifique se Ollama está rodando e se o modelo foi baixado. Host: http://127.0.0.1:11434 | Modelo: qwen2.5:7b-q4_K_M
+Sugestão: rode `ollama status` e `ollama list` no terminal.
+2025-12-02 02:00:01,798 | INFO | Analyzer (Monitor): heartbeat CPU 3.0% MEM 33.5% DISK 84.7%
+2025-12-02 02:00:10,983 | INFO | Analyzer (Monitor): heartbeat CPU 11.7% MEM 36.1% DISK 84.7%
+2025-12-02 02:01:17,333 | INFO | [ModelBackend] init provider=ollama model=qwen2.5:7b-q4_K_M host=http://127.0.0.1:11434
+2025-12-02 02:01:17,341 | INFO | [Monitor] starting monitor (autonomy=B2) interval=8s
+2025-12-02 02:01:17,357 | WARNING | [ModelBackend] request error attempt 1: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 2s
+2025-12-02 02:01:17,358 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-12-02 02:01:17,358 | INFO | AnalyzerApp initialized
+2025-12-02 02:01:18,905 | INFO | Analyzer (Monitor): heartbeat CPU 5.2% MEM 31.6% DISK 84.7%
+2025-12-02 02:01:19,373 | WARNING | [ModelBackend] request error attempt 2: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 4s
+2025-12-02 02:01:23,389 | WARNING | [ModelBackend] request error attempt 3: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 8s
+2025-12-02 02:01:27,973 | INFO | Analyzer (Monitor): heartbeat CPU 8.4% MEM 31.6% DISK 84.7%
+2025-12-02 02:01:30,647 | INFO | Você: Olá Analyzer, você pode limpar o meu cache de RAM por favor? eu autorizo
+2025-12-02 02:01:30,656 | WARNING | [ModelBackend] request error attempt 1: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 2s
+2025-12-02 02:01:31,405 | WARNING | [ModelBackend] request error attempt 4: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 16s
+2025-12-02 02:01:32,672 | WARNING | [ModelBackend] request error attempt 2: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 4s
+2025-12-02 02:01:36,687 | WARNING | [ModelBackend] request error attempt 3: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 8s
+2025-12-02 02:01:37,034 | INFO | Analyzer (Monitor): heartbeat CPU 3.3% MEM 31.6% DISK 84.7%
+2025-12-02 02:01:44,696 | WARNING | [ModelBackend] request error attempt 4: 404 Client Error: Not Found for url: http://127.0.0.1:11434/api/chat -> waiting 16s
+2025-12-02 02:01:46,095 | INFO | Analyzer (Monitor): heartbeat CPU 9.2% MEM 31.8% DISK 84.7%
+2025-12-02 02:01:47,406 | INFO | [ModelBackend] warmup completed
+2025-12-02 02:01:55,134 | INFO | Analyzer (Monitor): heartbeat CPU 4.9% MEM 31.9% DISK 84.7%
+2025-12-02 02:02:00,732 | INFO | Analyzer: [ERRO OLLAMA] Max retries exceeded contacting Ollama. Resposta fallback.
+
+Verifique se Ollama está rodando e se o modelo foi baixado. Host: http://127.0.0.1:11434 | Modelo: qwen2.5:7b-q4_K_M
+Sugestão: rode `ollama status` e `ollama list` no terminal.
+2025-12-02 02:02:04,154 | INFO | Analyzer (Monitor): heartbeat CPU 6.0% MEM 32.3% DISK 84.7%
+2025-12-02 02:02:13,192 | INFO | Analyzer (Monitor): heartbeat CPU 3.3% MEM 32.4% DISK 84.7%
+2025-12-02 02:02:22,251 | INFO | Analyzer (Monitor): heartbeat CPU 4.6% MEM 33.0% DISK 84.7%
+2025-12-02 02:02:31,306 | INFO | Analyzer (Monitor): heartbeat CPU 9.5% MEM 32.9% DISK 84.7%
+2025-12-02 02:02:40,367 | INFO | Analyzer (Monitor): heartbeat CPU 3.3% MEM 33.6% DISK 84.7%
+2025-12-02 02:02:52,140 | INFO | [ModelBackend] init provider=ollama model=qwen2.5:7b-instruct-q4_K_M host=http://127.0.0.1:11434
+2025-12-02 02:02:52,147 | INFO | [Monitor] starting monitor (autonomy=B2) interval=8s
+2025-12-02 02:02:52,162 | INFO | Analyzer: Olá, meu nome é Analyzer. Sou uma IA projetada para conversar naturalmente, manter contexto e ajudar com tarefas técnicas e gerais. O que deseja saber hoje?
+2025-12-02 02:02:52,162 | INFO | AnalyzerApp initialized
+2025-12-02 02:02:53,719 | INFO | Analyzer (Monitor): heartbeat CPU 9.0% MEM 26.2% DISK 84.7%
+2025-12-02 02:03:00,166 | WARNING | [ModelBackend] request error attempt 1: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=8) -> waiting 2s
+2025-12-02 02:03:00,837 | INFO | Você: ola, limpe meu cache de ram por favor
+2025-12-02 02:03:02,851 | INFO | Analyzer (Monitor): heartbeat CPU 9.3% MEM 32.6% DISK 84.7%
+2025-12-02 02:03:10,176 | WARNING | [ModelBackend] request error attempt 2: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=8) -> waiting 4s
+2025-12-02 02:03:11,863 | INFO | Analyzer (Monitor): heartbeat CPU 51.1% MEM 58.8% DISK 84.7%
+2025-12-02 02:03:20,904 | INFO | Analyzer (Monitor): heartbeat CPU 65.4% MEM 59.8% DISK 84.7%
+2025-12-02 02:03:22,186 | WARNING | [ModelBackend] request error attempt 3: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=8) -> waiting 8s
+2025-12-02 02:03:29,940 | INFO | Analyzer (Monitor): heartbeat CPU 55.3% MEM 59.8% DISK 84.7%
+2025-12-02 02:03:38,204 | WARNING | [ModelBackend] request error attempt 4: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=8) -> waiting 16s
+2025-12-02 02:03:40,638 | INFO | Analyzer (Monitor): heartbeat CPU 96.9% MEM 60.1% DISK 84.7%
+2025-12-02 02:03:40,644 | INFO | Analyzer (Monitor): Alerta: CPU 96.9% | RAM 60.1% | DISCO 84.7%
+Top processos:
+PID 15352 - ollama.exe CPU% 982.5 MEM% 25.996914422285332
+PID 0 - System Idle Process CPU% 658.2 MEM% 4.7905258727918975e-05
+PID 3800 - MsMpEng.exe CPU% 70.5 MEM% 0.5882286719201171
+
+2025-12-02 02:03:49,593 | INFO | Analyzer (Monitor): heartbeat CPU 62.1% MEM 53.4% DISK 84.7%
+2025-12-02 02:03:53,526 | INFO | Analyzer (Monitor): Ação: Processo ollama.exe (PID 15352) terminado.
+2025-12-02 02:03:53,530 | INFO | Analyzer: Desculpe, mas não tenho acesso ao seu sistema ou dispositivo para realizar essa operação. Essa tarefa precisa ser realizada diretamente no seu computador ou dispositivo móvel através das configurações correspondentes.
+
+No entanto, posso te orientar sobre como fazer isso em alguns sistemas:
+
+1. **Win
+2025-12-02 02:03:54,207 | INFO | [ModelBackend] warmup completed
+2025-12-02 02:03:58,655 | INFO | Analyzer (Monitor): heartbeat CPU 6.2% MEM 24.0% DISK 84.7%
+2025-12-02 02:04:07,683 | INFO | Analyzer (Monitor): heartbeat CPU 5.1% MEM 24.2% DISK 84.7%
+2025-12-02 02:04:15,577 | INFO | Você: qual a fórmula de bhaskara
+2025-12-02 02:04:16,714 | INFO | Analyzer (Monitor): heartbeat CPU 13.0% MEM 25.7% DISK 84.7%
+2025-12-02 02:04:25,719 | INFO | Analyzer (Monitor): heartbeat CPU 61.5% MEM 55.7% DISK 84.7%
+2025-12-02 02:04:34,728 | INFO | Analyzer (Monitor): heartbeat CPU 52.1% MEM 55.8% DISK 84.7%
+2025-12-02 02:04:43,763 | INFO | Analyzer (Monitor): heartbeat CPU 59.5% MEM 56.0% DISK 84.7%
+2025-12-02 02:04:52,814 | INFO | Analyzer (Monitor): heartbeat CPU 51.1% MEM 56.0% DISK 84.7%
+2025-12-02 02:05:02,003 | INFO | Analyzer (Monitor): heartbeat CPU 87.3% MEM 57.7% DISK 84.7%
+2025-12-02 02:05:11,048 | INFO | Analyzer (Monitor): heartbeat CPU 78.2% MEM 58.9% DISK 84.7%
+2025-12-02 02:05:17,532 | INFO | Analyzer: A fórmula de Bhaskara, usada para resolver equações quadráticas, é dada pela seguinte equação:
+
+\[ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \]
+
+onde \( a \), \( b \) e \( c \) são coeficientes de uma equação do segundo grau na forma \( ax^2 + bx + c = 0 \).
+2025-12-02 02:05:20,158 | INFO | Analyzer (Monitor): heartbeat CPU 3.8% MEM 58.8% DISK 84.7%
+2025-12-02 02:05:29,171 | INFO | Analyzer (Monitor): heartbeat CPU 3.0% MEM 59.7% DISK 84.7%
+2025-12-02 02:05:38,185 | INFO | Analyzer (Monitor): heartbeat CPU 16.6% MEM 54.5% DISK 84.7%
+2025-12-02 02:05:47,146 | INFO | Analyzer (Monitor): heartbeat CPU 9.4% MEM 54.9% DISK 84.7%
